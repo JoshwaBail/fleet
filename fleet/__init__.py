@@ -5,12 +5,12 @@ Fleet makes it easy to build AI agents that work across multiple providers
 (OpenAI, Anthropic, OpenRouter) with a clean, intuitive API.
 
 Quick Start:
-    from fleet import ChatCaptain, OpenAIProvider
-    import openai
+    from fleet import ChatCaptain, create_provider
 
-    provider = OpenAIProvider(openai.Client(api_key="your-key"))
-    captain = ChatCaptain(provider, name="MyBot")
-    response = captain.chat("Hello!", model="gpt-4")
+    # Cookie-cutter provider creation
+    provider = create_provider("openai", api_key="your-key")
+    captain = ChatCaptain(provider, name="MyBot", default_model="gpt-4o-mini")
+    response = captain.chat("Hello!")
     print(response.content)
 """
 
@@ -42,7 +42,11 @@ from fleet.providers import (
     BaseProvider,
     OpenAIProvider,
     AnthropicProvider,
-    OpenRouterProvider
+    OpenRouterProvider,
+    create_provider,
+    openai_provider,
+    anthropic_provider,
+    openrouter_provider
 )
 
 # Payloads (Responses)
@@ -77,6 +81,10 @@ __all__ = [
     "OpenAIProvider",
     "AnthropicProvider",
     "OpenRouterProvider",
+    "create_provider",
+    "openai_provider",
+    "anthropic_provider",
+    "openrouter_provider",
 
     # Payloads
     "Payload",

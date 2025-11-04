@@ -13,9 +13,42 @@ logger = logging.getLogger(__name__)
 
 
 class OpenAIProvider(BaseProvider):
-    """Provider implementation for OpenAI API"""
+    """
+    Provider implementation for OpenAI API.
 
-    def __init__(self, client: openai.Client):
+    Supports true dependency injection - pass either an api_key or a pre-configured client.
+    """
+
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        client: Optional[openai.Client] = None,
+        base_url: Optional[str] = None,
+        organization: Optional[str] = None,
+        **kwargs
+    ):
+        """
+        Initialize OpenAI provider.
+
+        Args:
+            api_key: OpenAI API key (if not providing a client)
+            client: Pre-configured OpenAI client (takes precedence over api_key)
+            base_url: Optional base URL for API
+            organization: Optional organization ID
+            **kwargs: Additional arguments passed to openai.Client
+        """
+        if client is None:
+            if api_key is None:
+                raise ValueError("Must provide either 'api_key' or 'client'")
+
+            client_kwargs = {"api_key": api_key, **kwargs}
+            if base_url:
+                client_kwargs["base_url"] = base_url
+            if organization:
+                client_kwargs["organization"] = organization
+
+            client = openai.Client(**client_kwargs)
+
         super().__init__(client, "OpenAI")
         self._cached_models = None
 

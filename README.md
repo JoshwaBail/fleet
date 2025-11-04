@@ -6,6 +6,7 @@ Fleet makes it easy to build AI agents that work seamlessly across multiple LLM 
 
 ## 🚀 Features
 
+- **🔄 True Dependency Injection** - Cookie-cutter API across all providers
 - **🎯 Simple & Lightweight** - Minimal boilerplate, maximum productivity
 - **🔌 Multi-Provider** - Works with OpenAI, Anthropic, and OpenRouter out of the box
 - **🛠️ Tool Support** - Easy function calling with Instruments and Arsenals
@@ -30,24 +31,27 @@ pip install -e .
 ## 🏁 Quick Start
 
 ```python
-from fleet import ChatCaptain, OpenAIProvider
-import openai
+from fleet import ChatCaptain, create_provider
 
-# Initialize provider
-provider = OpenAIProvider(openai.Client(api_key="your-api-key"))
+# Cookie-cutter provider creation - works identically for all providers!
+provider = create_provider("openai", api_key="your-api-key")
+# provider = create_provider("anthropic", api_key="your-api-key")  # Just change this!
+# provider = create_provider("openrouter", api_key="your-api-key") # Or this!
 
-# Create a captain (agent)
+# Create a captain (agent) - same regardless of provider
 captain = ChatCaptain(
     provider=provider,
     name="Navigator",
     system_prompt="You are a helpful AI assistant.",
-    default_model="gpt-4o-mini"
+    default_model="gpt-4o-mini"  # or claude-3-5-sonnet-20241022, etc.
 )
 
-# Chat!
+# Chat! - same API regardless of provider
 response = captain.chat("What's the weather like today?")
 print(response.content)
 ```
+
+**That's true dependency injection!** Switch providers by changing one word.
 
 ## 🗺️ Core Concepts
 
@@ -67,13 +71,43 @@ Fleet uses nautical/spacefaring terminology to make the API memorable and fun:
 
 ## 📚 Usage Examples
 
+### Cookie-Cutter Provider Switching
+
+Fleet's true dependency injection means **all providers work identically**:
+
+```python
+from fleet import ChatCaptain, create_provider
+
+# Method 1: Factory function (recommended)
+provider = create_provider("openai", api_key="...")      # OpenAI
+provider = create_provider("anthropic", api_key="...")   # Anthropic
+provider = create_provider("openrouter", api_key="...")  # OpenRouter
+
+# Method 2: Direct instantiation (also cookie-cutter!)
+from fleet import OpenAIProvider, AnthropicProvider, OpenRouterProvider
+
+provider = OpenAIProvider(api_key="...")      # Same signature
+provider = AnthropicProvider(api_key="...")   # Same signature
+provider = OpenRouterProvider(api_key="...")  # Same signature
+
+# Usage is IDENTICAL regardless of provider
+captain = ChatCaptain(provider=provider, default_model="gpt-4o-mini")
+response = captain.chat("Hello!")
+```
+
+**Perfect for:**
+- Multi-tenant applications
+- A/B testing different models
+- Cost optimization
+- Environment-based configuration
+- Fallback strategies
+
 ### Simple Chat
 
 ```python
-from fleet import ChatCaptain, OpenAIProvider
-import openai
+from fleet import ChatCaptain, create_provider
 
-provider = OpenAIProvider(openai.Client(api_key="..."))
+provider = create_provider("openai", api_key="...")
 
 captain = ChatCaptain(
     provider=provider,
@@ -93,8 +127,7 @@ response2 = captain.chat("What are its main use cases?")  # Remembers context
 ### Using Tools (Instruments)
 
 ```python
-from fleet import ToolCaptain, OpenAIProvider, instrument, Arsenal
-import openai
+from fleet import ToolCaptain, create_provider, instrument, Arsenal
 
 # Define tools using decorator
 @instrument(
@@ -118,7 +151,7 @@ arsenal.add_instrument(get_weather)
 arsenal.add_instrument(calculate)
 
 # Create captain with tools
-provider = OpenAIProvider(openai.Client(api_key="..."))
+provider = create_provider("openai", api_key="...")
 captain = ToolCaptain(
     provider=provider,
     name="Tool User",
@@ -131,39 +164,34 @@ response = captain.chat("What's the weather in Paris? Also, what's 15 * 23?")
 print(response.content)
 ```
 
-### Multiple Providers
+### Multiple Providers (Cookie-Cutter!)
 
 ```python
-from fleet import ChatCaptain, OpenAIProvider, AnthropicProvider, OpenRouterProvider
-import openai
-import anthropic
+from fleet import ChatCaptain, create_provider
 
-# OpenAI
-openai_provider = OpenAIProvider(openai.Client(api_key="..."))
+# All three providers use IDENTICAL syntax
+openai_provider = create_provider("openai", api_key="...")
+anthropic_provider = create_provider("anthropic", api_key="...")
+openrouter_provider = create_provider("openrouter", api_key="...")
+
+# Create captains - same code for all providers
 openai_captain = ChatCaptain(provider=openai_provider, default_model="gpt-4o")
-
-# Anthropic (Claude)
-anthropic_provider = AnthropicProvider(anthropic.Anthropic(api_key="..."))
 claude_captain = ChatCaptain(provider=anthropic_provider, default_model="claude-3-5-sonnet-20241022")
-
-# OpenRouter (access to many models)
-openrouter_provider = OpenRouterProvider(api_key="...")
-openrouter_captain = ChatCaptain(provider=openrouter_provider, default_model="meta-llama/llama-3.1-70b-instruct")
+llama_captain = ChatCaptain(provider=openrouter_provider, default_model="meta-llama/llama-3.1-70b-instruct")
 
 # Use any captain the same way
 question = "Explain AI in simple terms"
 print(openai_captain.chat(question).content)
 print(claude_captain.chat(question).content)
-print(openrouter_captain.chat(question).content)
+print(llama_captain.chat(question).content)
 ```
 
 ### Multi-Agent with Armada (Sequential)
 
 ```python
-from fleet import ChatCaptain, Armada, OpenAIProvider
-import openai
+from fleet import ChatCaptain, Armada, create_provider
 
-provider = OpenAIProvider(openai.Client(api_key="..."))
+provider = create_provider("openai", api_key="...")
 
 # Create specialized captains
 researcher = ChatCaptain(
@@ -207,10 +235,9 @@ print(result.content)
 ### Multi-Agent with Armada (Parallel)
 
 ```python
-from fleet import ChatCaptain, Armada, OpenAIProvider
-import openai
+from fleet import ChatCaptain, Armada, create_provider
 
-provider = OpenAIProvider(openai.Client(api_key="..."))
+provider = create_provider("openai", api_key="...")
 
 # Create captains with different perspectives
 tech_expert = ChatCaptain(provider=provider, name="Tech",

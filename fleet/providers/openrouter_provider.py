@@ -21,22 +21,40 @@ class OpenRouterProvider(BaseProvider):
 
     OpenRouter uses OpenAI-compatible endpoints, so we use the OpenAI client
     but with OpenRouter-specific configuration.
+
+    Supports true dependency injection - pass either an api_key or a pre-configured client.
     """
 
-    def __init__(self, api_key: str, site_url: Optional[str] = None, site_name: Optional[str] = None):
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        client: Optional[openai.Client] = None,
+        site_url: Optional[str] = None,
+        site_name: Optional[str] = None,
+        base_url: str = "https://openrouter.ai/api/v1",
+        **kwargs
+    ):
         """
         Initialize OpenRouter provider.
 
         Args:
-            api_key: OpenRouter API key
-            site_url: Your site URL (for rankings)
-            site_name: Your site name (for rankings)
+            api_key: OpenRouter API key (if not providing a client)
+            client: Pre-configured OpenAI client (takes precedence over api_key)
+            site_url: Your site URL (for OpenRouter rankings)
+            site_name: Your site name (for OpenRouter rankings)
+            base_url: OpenRouter base URL (default: https://openrouter.ai/api/v1)
+            **kwargs: Additional arguments passed to openai.Client
         """
-        # Create OpenAI client configured for OpenRouter
-        client = openai.Client(
-            api_key=api_key,
-            base_url="https://openrouter.ai/api/v1"
-        )
+        if client is None:
+            if api_key is None:
+                raise ValueError("Must provide either 'api_key' or 'client'")
+
+            # Create OpenAI client configured for OpenRouter
+            client = openai.Client(
+                api_key=api_key,
+                base_url=base_url,
+                **kwargs
+            )
 
         super().__init__(client, "OpenRouter")
 

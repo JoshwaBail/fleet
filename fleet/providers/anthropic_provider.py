@@ -13,9 +13,38 @@ logger = logging.getLogger(__name__)
 
 
 class AnthropicProvider(BaseProvider):
-    """Provider implementation for Anthropic/Claude API"""
+    """
+    Provider implementation for Anthropic/Claude API.
 
-    def __init__(self, client: anthropic.Anthropic):
+    Supports true dependency injection - pass either an api_key or a pre-configured client.
+    """
+
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        client: Optional[anthropic.Anthropic] = None,
+        base_url: Optional[str] = None,
+        **kwargs
+    ):
+        """
+        Initialize Anthropic provider.
+
+        Args:
+            api_key: Anthropic API key (if not providing a client)
+            client: Pre-configured Anthropic client (takes precedence over api_key)
+            base_url: Optional base URL for API
+            **kwargs: Additional arguments passed to anthropic.Anthropic
+        """
+        if client is None:
+            if api_key is None:
+                raise ValueError("Must provide either 'api_key' or 'client'")
+
+            client_kwargs = {"api_key": api_key, **kwargs}
+            if base_url:
+                client_kwargs["base_url"] = base_url
+
+            client = anthropic.Anthropic(**client_kwargs)
+
         super().__init__(client, "Anthropic")
 
     def send_message(
