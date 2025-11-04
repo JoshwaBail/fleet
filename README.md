@@ -352,9 +352,17 @@ print(f"Total tokens: {response.total_tokens}")
 print(f"Estimated cost: ${response.cost_estimate:.4f}")
 ```
 
+## 📖 Documentation
+
+- **[Agent Orchestration Research](docs/AGENT_ORCHESTRATION_RESEARCH.md)** - Comprehensive research on modern agent patterns (ReAct, Plan-and-Execute, Debate, Swarm, and more)
+- **[Pattern Comparison Matrix](docs/PATTERN_COMPARISON_MATRIX.md)** - Decision guide for choosing the right orchestration pattern
+- **[Examples](examples/)** - 7 working examples demonstrating Fleet capabilities
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+We're actively researching and planning new agent orchestration patterns. Check out our [research docs](docs/AGENT_ORCHESTRATION_RESEARCH.md) to see what's coming and provide feedback on priorities!
 
 ## 📄 License
 
