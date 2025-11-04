@@ -20,11 +20,22 @@ __version__ = "0.2.0"
 from fleet.captains import (
     BaseCaptain,
     ChatCaptain,
-    ToolCaptain
+    ToolCaptain,
+    # Advanced Patterns
+    Navigator,
+    Quartermaster,
+    Admiral,
+    WatchChange
 )
 
 # Multi-agent orchestration
-from fleet.armada import Armada
+from fleet.armada import (
+    Armada,
+    # Advanced Patterns
+    HarborMaster,
+    FleetCommand,
+    Council
+)
 
 # Instruments (Tools)
 from fleet.instruments import (
@@ -63,9 +74,17 @@ __all__ = [
     "BaseCaptain",
     "ChatCaptain",
     "ToolCaptain",
+    "Navigator",  # ReAct pattern
+    "Quartermaster",  # Reflection pattern
+    "Admiral",  # Plan-and-Execute pattern
+    "WatchChange",  # Handoff pattern
 
     # Armada
     "Armada",
+    "HarborMaster",  # Router/Triage pattern
+    "FleetCommand",  # Hierarchical pattern
+    "Council",  # Debate pattern
+
 
     # Instruments
     "Instrument",
