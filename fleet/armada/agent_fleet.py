@@ -1,7 +1,7 @@
 """
-Armada - Multi-agent orchestration system.
+AgentFleet - Multi-agent orchestration system.
 
-An Armada coordinates multiple Captains to work together on complex missions.
+An AgentFleet coordinates multiple Captains to work together on complex missions.
 Think of it as a fleet of ships working in concert.
 """
 
@@ -15,9 +15,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class Armada:
+class AgentFleet:
     """
-    Armada orchestrates multiple Captains working together.
+    AgentFleet orchestrates multiple Captains working together.
 
     Supports two composition modes:
     - Sequential: Captains work one after another (chain of thought)
@@ -26,13 +26,13 @@ class Armada:
 
     def __init__(
         self,
-        captains: List[Union[BaseCaptain, 'Armada']],
-        name: str = "Armada",
+        captains: List[Union[BaseCaptain, 'AgentFleet']],
+        name: str = "AgentFleet",
         description: str = "",
         synthesize: bool = True
     ):
         """
-        Initialize an Armada.
+        Initialize an AgentFleet.
 
         Args:
             captains: List of captains (or nested armadas) to orchestrate
@@ -49,7 +49,7 @@ class Armada:
         self.colors = ['magenta', 'cyan', 'yellow', 'green', 'blue', 'red']
         self._assign_colors()
 
-        logger.info(f"Initialized Armada: {name} with {len(captains)} captains")
+        logger.info(f"Initialized AgentFleet: {name} with {len(captains)} captains")
 
     def _assign_colors(self):
         """Assign colors to captains for terminal output"""
@@ -57,7 +57,7 @@ class Armada:
             if not hasattr(captain, 'color') or captain.color == 'white':
                 captain.color = self.colors[i % len(self.colors)]
 
-    def _log_action(self, captain: Union[BaseCaptain, 'Armada'], action: str, message: str, max_length: int = 100):
+    def _log_action(self, captain: Union[BaseCaptain, 'AgentFleet'], action: str, message: str, max_length: int = 100):
         """Log captain actions with color coding"""
         color = getattr(captain, 'color', 'white')
         truncated = message[:max_length] + "..." if len(message) > max_length else message
@@ -102,7 +102,7 @@ class Armada:
             full_context = "\n\n".join(context_parts)
 
             # Get response
-            if isinstance(captain, Armada):
+            if isinstance(captain, AgentFleet):
                 payload = captain.voyage_sequential(
                     full_context,
                     model,
@@ -160,12 +160,12 @@ class Armada:
         print(colored(f"Deploying {len(self.captains)} captains simultaneously", 'white'))
         print(colored(f"{'='*60}\n", 'white'))
 
-        async def captain_task(captain: Union[BaseCaptain, 'Armada']) -> Payload:
+        async def captain_task(captain: Union[BaseCaptain, 'AgentFleet']) -> Payload:
             """Execute a single captain's task"""
             self._log_action(captain, "⚡ LAUNCHING", initial_message)
 
             # Get response (in async context, we call sync methods)
-            if isinstance(captain, Armada):
+            if isinstance(captain, AgentFleet):
                 # Nested armada uses sequential by default
                 payload = captain.voyage_sequential(
                     initial_message,
@@ -248,7 +248,7 @@ Provide a well-structured synthesis that represents the collective intelligence 
 
         # Use the first captain's provider for synthesis
         first_captain = self.captains[0]
-        while isinstance(first_captain, Armada):
+        while isinstance(first_captain, AgentFleet):
             first_captain = first_captain.captains[0]
 
         provider = first_captain.provider
@@ -333,7 +333,7 @@ Role: {captain_desc if captain_desc else 'Not specified'}
         else:
             raise ValueError(f"Invalid mode: {mode}. Use 'sequential' or 'parallel'")
 
-    def add_captain(self, captain: Union[BaseCaptain, 'Armada']):
+    def add_captain(self, captain: Union[BaseCaptain, 'AgentFleet']):
         """Add a captain to this armada"""
         self.captains.append(captain)
         self._assign_colors()
@@ -343,7 +343,7 @@ Role: {captain_desc if captain_desc else 'Not specified'}
         return len(self.captains)
 
     def __str__(self) -> str:
-        return f"Armada({self.name}, {len(self.captains)} captains)"
+        return f"AgentFleet({self.name}, {len(self.captains)} captains)"
 
     def __repr__(self) -> str:
         return self.__str__()

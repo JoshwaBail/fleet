@@ -1,16 +1,16 @@
-"""Armada module - Multi-agent orchestration for Fleet"""
+"""Multi-agent orchestration for Fleet"""
 
-from fleet.armada.armada import Armada
+from fleet.armada.agent_fleet import AgentFleet
 
 # Advanced Patterns
-from fleet.armada.harbor_master import HarborMaster
-from fleet.armada.fleet_command import FleetCommand
+from fleet.armada.router import Router
+from fleet.armada.hierarchical_fleet import HierarchicalFleet
 from fleet.armada.council import Council
 
 __all__ = [
-    "Armada",
+    "AgentFleet",  # Multi-agent orchestration (formerly Armada)
     # Advanced Patterns
-    "HarborMaster",  # Router/Triage pattern
-    "FleetCommand",  # Hierarchical pattern
+    "Router",  # Router/Triage pattern (formerly HarborMaster)
+    "HierarchicalFleet",  # Hierarchical pattern (formerly FleetCommand)
     "Council",  # Debate pattern
 ]

@@ -1,7 +1,7 @@
 """
-Watch Change - Handoff Pattern
+Handoff Captain - Handoff Pattern
 
-A Watch Change captain can transfer control and context to another captain,
+A Handoff Captain captain can transfer control and context to another captain,
 like changing watch duty on a ship.
 
 Agent A → Handoff → Agent B (with full context)
@@ -10,8 +10,8 @@ Agent A → Handoff → Agent B (with full context)
 from typing import Optional, Dict, List, Any, Callable
 from fleet.captains.tool_captain import ToolCaptain
 from fleet.providers.base_provider import BaseProvider
-from fleet.instruments.arsenal import Arsenal
-from fleet.instruments.instrument import Instrument, instrument as instrument_decorator
+from fleet.tools.toolbox import Toolbox
+from fleet.tools.tool import Tool, instrument as tool_decorator
 from fleet.payload.payload import Payload
 import json
 import logging
@@ -19,11 +19,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class WatchChange(ToolCaptain):
+class HandoffCaptain(ToolCaptain):
     """
-    WatchChange implements the Handoff pattern (inspired by OpenAI Swarm).
+    HandoffCaptain implements the Handoff pattern (inspired by OpenAI Swarm).
 
-    A WatchChange captain can hand off conversations to other captains,
+    A HandoffCaptain captain can hand off conversations to other captains,
     transferring full context seamlessly.
 
     Perfect for:
@@ -36,19 +36,19 @@ class WatchChange(ToolCaptain):
     def __init__(
         self,
         provider: BaseProvider,
-        name: str = "Watch Change",
+        name: str = "Handoff Captain",
         system_prompt: str = "You are a helpful assistant who can hand off to specialists when needed.",
         description: str = "",
         color: str = "green",
-        arsenal: Optional[Arsenal] = None,
-        instruments: Optional[List[Instrument]] = None,
+        toolbox: Optional[Toolbox] = None,
+        tools: Optional[List[Tool]] = None,
         default_model: Optional[str] = None,
         default_temperature: float = 0.7,
         default_max_tokens: int = 2048,
         handoff_enabled: bool = True
     ):
         """
-        Initialize a WatchChange captain (Handoff-capable agent).
+        Initialize a HandoffCaptain captain (Handoff-capable agent).
 
         Args:
             provider: The LLM provider
@@ -56,8 +56,8 @@ class WatchChange(ToolCaptain):
             system_prompt: System instructions
             description: Captain's role
             color: Terminal color
-            arsenal: Tools available
-            instruments: Individual instruments
+            toolbox: Tools available
+            tools: Individual instruments
             default_model: Default model
             default_temperature: Default temperature
             default_max_tokens: Default max tokens
@@ -69,20 +69,20 @@ class WatchChange(ToolCaptain):
             system_prompt=system_prompt,
             description=description,
             color=color,
-            arsenal=arsenal,
-            instruments=instruments,
+            toolbox=toolbox,
+            tools=tools,
             default_model=default_model,
             default_temperature=default_temperature,
             default_max_tokens=default_max_tokens
         )
 
         self.handoff_enabled = handoff_enabled
-        self.handoff_targets: Dict[str, 'WatchChange'] = {}
+        self.handoff_targets: Dict[str, 'HandoffCaptain'] = {}
         self.handoff_history: List[Dict] = []
 
-        logger.info(f"Initialized WatchChange: {name} with Handoff pattern")
+        logger.info(f"Initialized HandoffCaptain: {name} with Handoff pattern")
 
-    def register_handoff(self, target_name: str, target_captain: 'WatchChange'):
+    def register_handoff(self, target_name: str, target_captain: 'HandoffCaptain'):
         """
         Register another captain as a handoff target.
 
@@ -99,7 +99,7 @@ class WatchChange(ToolCaptain):
 
         logger.info(f"{self.name} registered handoff to {target_captain.name} as '{target_name}'")
 
-    def _create_handoff_instrument(self, target_name: str, target_captain: 'WatchChange') -> Instrument:
+    def _create_handoff_instrument(self, target_name: str, target_captain: 'HandoffCaptain') -> Tool:
         """Create an instrument for handing off to another captain"""
 
         def handoff_function(reason: str = "Transferring to specialist") -> dict:
@@ -111,14 +111,14 @@ class WatchChange(ToolCaptain):
                 "reason": reason
             }
 
-        from fleet.instruments.instrument import Instrument, InstrumentParameter
+        from fleet.tools.tool import Tool, ToolParameter
 
-        return Instrument(
+        return Tool(
             name=f"handoff_to_{target_name}",
             description=f"Hand off this conversation to {target_captain.name} ({target_captain.description})",
             function=handoff_function,
             parameters=[
-                InstrumentParameter(
+                ToolParameter(
                     name="reason",
                     type="string",
                     description="Reason for the handoff",
@@ -158,7 +158,7 @@ class WatchChange(ToolCaptain):
 
         while handoff_count < max_handoffs:
             # Get response from current captain
-            result = super(WatchChange, current_captain).send_message(
+            result = super(HandoffCaptain, current_captain).send_message(
                 content=current_message,
                 model=model or current_captain.default_model,
                 temperature=temperature if temperature is not None else current_captain.default_temperature,
@@ -218,4 +218,4 @@ class WatchChange(ToolCaptain):
 
     def __str__(self) -> str:
         handoff_info = f", {len(self.handoff_targets)} handoff targets" if self.handoff_targets else ""
-        return f"WatchChange({self.name}{handoff_info})"
+        return f"HandoffCaptain({self.name}{handoff_info})"

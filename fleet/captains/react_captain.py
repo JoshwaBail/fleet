@@ -1,7 +1,7 @@
 """
-Navigator - ReAct (Reasoning and Acting) Pattern
+ReActCaptain - ReAct (Reasoning and Acting) Pattern
 
-A Navigator uses the ReAct pattern: iteratively reasoning about what to do,
+A ReActCaptain uses the ReAct pattern: iteratively reasoning about what to do,
 taking actions, and observing the results until the task is complete.
 
 Think → Act → Observe → Repeat
@@ -10,19 +10,19 @@ Think → Act → Observe → Repeat
 from typing import Optional, List, Dict, Any
 from fleet.captains.tool_captain import ToolCaptain
 from fleet.providers.base_provider import BaseProvider
-from fleet.instruments.arsenal import Arsenal
-from fleet.instruments.instrument import Instrument
+from fleet.tools.toolbox import Toolbox
+from fleet.tools.tool import Tool
 from fleet.payload.payload import Payload
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class Navigator(ToolCaptain):
+class ReActCaptain(ToolCaptain):
     """
-    Navigator implements the ReAct (Reasoning and Acting) pattern.
+    ReActCaptain implements the ReAct (Reasoning and Acting) pattern.
 
-    The Navigator alternates between reasoning (thinking about what to do)
+    The ReActCaptain alternates between reasoning (thinking about what to do)
     and acting (using tools or responding), with explicit observation steps.
 
     Perfect for:
@@ -35,12 +35,12 @@ class Navigator(ToolCaptain):
     def __init__(
         self,
         provider: BaseProvider,
-        name: str = "Navigator",
+        name: str = "ReActCaptain",
         system_prompt: str = None,
         description: str = "",
         color: str = "cyan",
-        arsenal: Optional[Arsenal] = None,
-        instruments: Optional[List[Instrument]] = None,
+        toolbox: Optional[Toolbox] = None,
+        tools: Optional[List[Tool]] = None,
         default_model: Optional[str] = None,
         default_temperature: float = 0.0,
         default_max_tokens: int = 2048,
@@ -48,16 +48,16 @@ class Navigator(ToolCaptain):
         verbose: bool = True
     ):
         """
-        Initialize a Navigator (ReAct agent).
+        Initialize a ReActCaptain (ReAct agent).
 
         Args:
             provider: The LLM provider
-            name: Navigator name
+            name: ReActCaptain name
             system_prompt: System instructions (auto-generated if None)
-            description: Navigator's role description
+            description: ReActCaptain's role description
             color: Terminal color
-            arsenal: Tools available to this navigator
-            instruments: Individual instruments to add
+            toolbox: Tools available to this navigator
+            tools: Individual instruments to add
             default_model: Default model
             default_temperature: Default temperature
             default_max_tokens: Default max tokens
@@ -73,8 +73,8 @@ class Navigator(ToolCaptain):
             system_prompt=system_prompt,
             description=description,
             color=color,
-            arsenal=arsenal,
-            instruments=instruments,
+            toolbox=toolbox,
+            tools=tools,
             default_model=default_model,
             default_temperature=default_temperature,
             default_max_tokens=default_max_tokens,
@@ -85,11 +85,11 @@ class Navigator(ToolCaptain):
         self.verbose = verbose
         self.reasoning_trace = []
 
-        logger.info(f"Initialized Navigator: {name} with ReAct pattern (max_iterations={max_iterations})")
+        logger.info(f"Initialized ReActCaptain: {name} with ReAct pattern (max_iterations={max_iterations})")
 
     def _create_react_prompt(self) -> str:
         """Create a ReAct-style system prompt"""
-        return """You are a Navigator using the ReAct (Reasoning and Acting) pattern.
+        return """You are a ReActCaptain using the ReAct (Reasoning and Acting) pattern.
 
 For each task, you should:
 1. THINK: Reason about what to do next
@@ -126,7 +126,7 @@ Be methodical and show your work."""
         """
         if self.verbose:
             print(f"\n{'='*60}")
-            print(f"🧭 Navigator: {self.name}")
+            print(f"🧭 ReActCaptain: {self.name}")
             print(f"Task: {task}")
             print(f"{'='*60}\n")
 
@@ -200,4 +200,4 @@ Be methodical and show your work."""
         return result
 
     def __str__(self) -> str:
-        return f"Navigator({self.name}, ReAct pattern, {len(self.arsenal)} instruments)"
+        return f"ReActCaptain({self.name}, ReAct pattern, {len(self.toolbox)} tools)"

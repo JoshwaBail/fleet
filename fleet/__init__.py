@@ -1,5 +1,5 @@
 """
-Fleet - A lightweight, nautical-themed LLM agent builder.
+Fleet - A lightweight LLM agent builder.
 
 Fleet makes it easy to build AI agents that work across multiple providers
 (OpenAI, Anthropic, OpenRouter) with a clean, intuitive API.
@@ -22,30 +22,30 @@ from fleet.captains import (
     ChatCaptain,
     ToolCaptain,
     # Advanced Patterns
-    Navigator,
-    Quartermaster,
+    ReActCaptain,
+    ReflectiveCaptain,
     Admiral,
-    WatchChange
+    HandoffCaptain
 )
 
 # Multi-agent orchestration
 from fleet.armada import (
-    Armada,
+    AgentFleet,
     # Advanced Patterns
-    HarborMaster,
-    FleetCommand,
+    Router,
+    HierarchicalFleet,
     Council
 )
 
-# Instruments (Tools)
-from fleet.instruments import (
-    Instrument,
-    InstrumentParameter,
-    instrument,
-    build_instrument,
-    Arsenal,
-    ArsenalBuilder,
-    create_arsenal
+# Tools
+from fleet.tools import (
+    Tool,
+    ToolParameter,
+    tool,
+    build_tool,
+    Toolbox,
+    ToolboxBuilder,
+    create_toolbox
 )
 
 # Providers
@@ -74,26 +74,25 @@ __all__ = [
     "BaseCaptain",
     "ChatCaptain",
     "ToolCaptain",
-    "Navigator",  # ReAct pattern
-    "Quartermaster",  # Reflection pattern
+    "ReActCaptain",  # ReAct pattern (formerly Navigator)
+    "ReflectiveCaptain",  # Reflection pattern (formerly Quartermaster)
     "Admiral",  # Plan-and-Execute pattern
-    "WatchChange",  # Handoff pattern
+    "HandoffCaptain",  # Handoff pattern (formerly WatchChange)
 
-    # Armada
-    "Armada",
-    "HarborMaster",  # Router/Triage pattern
-    "FleetCommand",  # Hierarchical pattern
+    # Multi-Agent Orchestration
+    "AgentFleet",  # Multi-agent orchestration (formerly Armada)
+    "Router",  # Router/Triage pattern (formerly HarborMaster)
+    "HierarchicalFleet",  # Hierarchical pattern (formerly FleetCommand)
     "Council",  # Debate pattern
 
-
-    # Instruments
-    "Instrument",
-    "InstrumentParameter",
-    "instrument",
-    "build_instrument",
-    "Arsenal",
-    "ArsenalBuilder",
-    "create_arsenal",
+    # Tools
+    "Tool",
+    "ToolParameter",
+    "tool",
+    "build_tool",
+    "Toolbox",
+    "ToolboxBuilder",
+    "create_toolbox",
 
     # Providers
     "BaseProvider",

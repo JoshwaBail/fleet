@@ -8,10 +8,10 @@ Use Case: Data exploration and analysis where you need visibility into reasoning
 """
 
 import os
-from fleet import Navigator, create_provider, instrument, Arsenal
+from fleet import ReActCaptain, create_provider, tool, Toolbox
 
 # Define some data analysis instruments
-@instrument(
+@tool(
     name="query_database",
     description="Query a database for information"
 )
@@ -31,7 +31,7 @@ def query_database(query: str) -> dict:
     return {"message": "No data found"}
 
 
-@instrument(
+@tool(
     name="calculate",
     description="Perform mathematical calculations"
 )
@@ -45,7 +45,7 @@ def calculate(expression: str) -> float:
         return {"error": str(e)}
 
 
-@instrument(
+@tool(
     name="get_metadata",
     description="Get metadata about the database schema"
 )
@@ -69,13 +69,13 @@ def main():
     provider = create_provider("openai", api_key=os.getenv("OPENAI_API_KEY"))
 
     # Build arsenal
-    analysis_arsenal = Arsenal("Data Analysis Tools")
-    analysis_arsenal.add_instrument(query_database)
-    analysis_arsenal.add_instrument(calculate)
-    analysis_arsenal.add_instrument(get_metadata)
+    analysis_toolbox = Toolbox("Data Analysis Tools")
+    analysis_toolbox.add_tool(query_database)
+    analysis_toolbox.add_tool(calculate)
+    analysis_toolbox.add_tool(get_metadata)
 
     # Create Navigator
-    navigator = Navigator(
+    navigator = ReActCaptain(
         provider=provider,
         name="Data Explorer",
         system_prompt="""You are a data analyst. When given a question about data:

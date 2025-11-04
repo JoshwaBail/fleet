@@ -48,7 +48,7 @@ def main():
     )
 
     # Create an armada with parallel execution and synthesis
-    armada = Armada(
+    armada = AgentFleet(
         captains=[technical_captain, business_captain, ux_captain, security_captain],
         name="Product Review Fleet",
         description="Multi-perspective product analysis",

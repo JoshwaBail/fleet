@@ -8,7 +8,7 @@ Use Case: Content creation where quality is more important than speed.
 """
 
 import os
-from fleet import Quartermaster, create_provider
+from fleet import ReflectiveCaptain, create_provider
 
 
 def main():
@@ -20,7 +20,7 @@ def main():
     provider = create_provider("openai", api_key=os.getenv("OPENAI_API_KEY"))
 
     # Create Quartermaster
-    quartermaster = Quartermaster(
+    quartermaster = ReflectiveCaptain(
         provider=provider,
         name="Content Refiner",
         system_prompt="You are a skilled technical writer focused on clarity and accuracy.",

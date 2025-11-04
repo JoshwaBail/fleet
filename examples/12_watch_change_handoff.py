@@ -18,9 +18,9 @@ Pattern: Handoff (Agent Transfer)
 """
 
 import os
-from fleet import WatchChange
+from fleet import HandoffCaptain
 from fleet.providers import create_provider
-from fleet.instruments import Instrument, Arsenal
+from fleet.tools import Instrument, Toolbox
 
 
 def main():
@@ -52,17 +52,17 @@ def main():
         """Restart a service (requires elevated permissions)"""
         return f"Service '{service_name}' restart initiated. ETA: 2-3 minutes."
 
-    tech_arsenal = Arsenal()
-    tech_arsenal.add_instrument(
-        Instrument.from_function(check_system_status)
+    tech_toolbox = Toolbox()
+    tech_toolbox.add_tool(
+        Tool.from_function(check_system_status)
     )
-    tech_arsenal.add_instrument(
-        Instrument.from_function(restart_service)
+    tech_toolbox.add_tool(
+        Tool.from_function(restart_service)
     )
 
     # Create specialized agents
     # 1. General Support Agent (first line)
-    general_support = WatchChange(
+    general_support = HandoffCaptain(
         provider=provider,
         model="gpt-4o-mini",
         system_prompt=(
@@ -78,10 +78,10 @@ def main():
     )
 
     # 2. Technical Support Specialist
-    technical_support = WatchChange(
+    technical_support = HandoffCaptain(
         provider=provider,
         model="gpt-4o-mini",
-        instruments=tech_arsenal.get_instruments(),
+        instruments=tech_toolbox.get_tools(),
         system_prompt=(
             "You are a Technical Support Specialist. You handle complex technical issues, "
             "API problems, integration help, and system troubleshooting. "
@@ -94,7 +94,7 @@ def main():
     )
 
     # 3. Billing Support Specialist
-    billing_support = WatchChange(
+    billing_support = HandoffCaptain(
         provider=provider,
         model="gpt-4o-mini",
         system_prompt=(
@@ -108,7 +108,7 @@ def main():
     )
 
     # 4. Engineering Team (final escalation)
-    engineering_team = WatchChange(
+    engineering_team = HandoffCaptain(
         provider=provider,
         model="gpt-4o-mini",
         system_prompt=(

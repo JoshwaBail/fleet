@@ -1,8 +1,8 @@
 """
-Instrument - Tool builder system for Fleet captains.
+Tool - Tool builder system for Fleet captains.
 
-An Instrument is a tool that a Captain can use to accomplish tasks.
-Think of it as equipment or gear that enhances a Captain's capabilities.
+A Tool is a function that a Captain can use to accomplish tasks.
+Tools provide capabilities like API calls, data access, and computations.
 """
 
 from typing import Callable, Dict, Any, Optional, List, get_type_hints
@@ -12,9 +12,9 @@ import json
 
 
 @dataclass
-class InstrumentParameter:
+class ToolParameter:
     """
-    Represents a parameter for an Instrument.
+    Represents a parameter for a Tool.
 
     Attributes:
         name: Parameter name
@@ -44,9 +44,9 @@ class InstrumentParameter:
         return schema
 
 
-class Instrument:
+class Tool:
     """
-    An Instrument is a tool that can be used by a Captain.
+    A Tool is a function that can be used by a Captain.
 
     This class provides a simple way to define tools with proper schemas
     that work across different LLM providers (OpenAI, Anthropic, etc.)
@@ -57,15 +57,15 @@ class Instrument:
         name: str,
         description: str,
         function: Callable,
-        parameters: Optional[List[InstrumentParameter]] = None,
+        parameters: Optional[List[ToolParameter]] = None,
         auto_infer_params: bool = True
     ):
         """
-        Create a new Instrument.
+        Create a new Tool.
 
         Args:
-            name: Name of the instrument (should be snake_case)
-            description: What this instrument does
+            name: Name of the tool (should be snake_case)
+            description: What this tool does
             function: The actual function to execute
             parameters: List of parameters (if None, will try to infer)
             auto_infer_params: Whether to automatically infer parameters from function signature
@@ -78,7 +78,7 @@ class Instrument:
         if auto_infer_params and not parameters:
             self.parameters = self._infer_parameters()
 
-    def _infer_parameters(self) -> List[InstrumentParameter]:
+    def _infer_parameters(self) -> List[ToolParameter]:
         """
         Automatically infer parameters from function signature.
         """
@@ -102,7 +102,7 @@ class Instrument:
             # Get default value
             default = None if required else param.default
 
-            params.append(InstrumentParameter(
+            params.append(ToolParameter(
                 name=param_name,
                 type=param_type,
                 description=f"Parameter: {param_name}",
@@ -143,7 +143,7 @@ class Instrument:
         return "string"  # default fallback
 
     def execute(self, **kwargs) -> Any:
-        """Execute the instrument's function with given parameters"""
+        """Execute the tool's function with given parameters"""
         return self.function(**kwargs)
 
     def to_openai_schema(self) -> Dict[str, Any]:
@@ -198,33 +198,56 @@ class Instrument:
         }
 
     def __str__(self) -> str:
-        return f"Instrument({self.name})"
+        return f"Tool({self.name})"
 
     def __repr__(self) -> str:
         return self.__str__()
 
+    @classmethod
+    def from_function(cls, function: Callable, name: Optional[str] = None, description: Optional[str] = None) -> 'Tool':
+        """
+        Create a Tool from a function with automatic parameter inference.
 
-def instrument(
+        Args:
+            function: The function to wrap as a tool
+            name: Optional name (defaults to function name)
+            description: Optional description (defaults to function docstring)
+
+        Returns:
+            A new Tool instance
+        """
+        tool_name = name or function.__name__
+        tool_desc = description or function.__doc__ or f"Tool: {tool_name}"
+
+        return cls(
+            name=tool_name,
+            description=tool_desc.strip(),
+            function=function,
+            auto_infer_params=True
+        )
+
+
+def tool(
     name: Optional[str] = None,
     description: Optional[str] = None,
-    parameters: Optional[List[InstrumentParameter]] = None
+    parameters: Optional[List[ToolParameter]] = None
 ):
     """
-    Decorator to easily create instruments from functions.
+    Decorator to easily create tools from functions.
 
     Usage:
-        @instrument(name="get_weather", description="Get weather for a location")
+        @tool(name="get_weather", description="Get weather for a location")
         def get_weather(location: str, units: str = "celsius") -> dict:
             # ... implementation
             return {"temp": 20, "condition": "sunny"}
     """
-    def decorator(func: Callable) -> Instrument:
-        instrument_name = name or func.__name__
-        instrument_desc = description or func.__doc__ or f"Instrument: {instrument_name}"
+    def decorator(func: Callable) -> Tool:
+        tool_name = name or func.__name__
+        tool_desc = description or func.__doc__ or f"Tool: {tool_name}"
 
-        return Instrument(
-            name=instrument_name,
-            description=instrument_desc.strip(),
+        return Tool(
+            name=tool_name,
+            description=tool_desc.strip(),
             function=func,
             parameters=parameters
         )
@@ -233,18 +256,18 @@ def instrument(
 
 
 # Convenience builder function
-def build_instrument(
+def build_tool(
     name: str,
     description: str,
-    parameters: List[InstrumentParameter],
+    parameters: List[ToolParameter],
     function: Callable
-) -> Instrument:
+) -> Tool:
     """
-    Builder function for creating instruments.
+    Builder function for creating tools.
 
-    This is a more explicit way to create instruments compared to the decorator.
+    This is a more explicit way to create tools compared to the decorator.
     """
-    return Instrument(
+    return Tool(
         name=name,
         description=description,
         function=function,

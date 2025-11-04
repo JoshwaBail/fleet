@@ -5,18 +5,18 @@ from fleet.captains.chat_captain import ChatCaptain
 from fleet.captains.tool_captain import ToolCaptain
 
 # Advanced Patterns
-from fleet.captains.navigator import Navigator
-from fleet.captains.quartermaster import Quartermaster
+from fleet.captains.react_captain import ReActCaptain
+from fleet.captains.reflective_captain import ReflectiveCaptain
 from fleet.captains.admiral import Admiral
-from fleet.captains.watch_change import WatchChange
+from fleet.captains.handoff_captain import HandoffCaptain
 
 __all__ = [
     "BaseCaptain",
     "ChatCaptain",
     "ToolCaptain",
     # Advanced Patterns
-    "Navigator",  # ReAct pattern
-    "Quartermaster",  # Reflection pattern
+    "ReActCaptain",  # ReAct pattern (formerly Navigator)
+    "ReflectiveCaptain",  # Reflection pattern (formerly Quartermaster)
     "Admiral",  # Plan-and-Execute pattern
-    "WatchChange",  # Handoff pattern
+    "HandoffCaptain",  # Handoff pattern (formerly WatchChange)
 ]

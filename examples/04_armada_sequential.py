@@ -41,7 +41,7 @@ def main():
     )
 
     # Create an armada (sequential pipeline)
-    armada = Armada(
+    armada = AgentFleet(
         captains=[researcher, analyst, writer],
         name="Content Creation Fleet",
         description="Research → Analyze → Write pipeline"

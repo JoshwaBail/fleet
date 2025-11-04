@@ -17,7 +17,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class HarborMaster:
+class Router:
     """
     Harbor Master implements the Router/Triage pattern.
 
@@ -216,7 +216,7 @@ Respond with ONLY the specialist key (e.g., "technical", "billing", etc.). No ex
         return len(self.specialists)
 
     def __str__(self) -> str:
-        return f"HarborMaster({self.name}, {len(self.specialists)} specialists)"
+        return f"Router({self.name}, {len(self.specialists)} specialists)"
 
     def __repr__(self) -> str:
         return self.__str__()

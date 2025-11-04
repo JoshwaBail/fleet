@@ -8,11 +8,11 @@ This example shows how to:
 """
 
 import os
-from fleet import ToolCaptain, OpenAIProvider, instrument, Arsenal
+from fleet import ToolCaptain, OpenAIProvider, tool, Toolbox
 import openai
 
 # Define some instruments using the decorator
-@instrument(
+@tool(
     name="get_weather",
     description="Get current weather for a location"
 )
@@ -27,7 +27,7 @@ def get_weather(location: str, units: str = "celsius") -> dict:
         "wind_speed": "10 knots"
     }
 
-@instrument(
+@tool(
     name="calculate_distance",
     description="Calculate nautical distance between two ports"
 )
@@ -41,7 +41,7 @@ def calculate_distance(port_a: str, port_b: str) -> dict:
         "estimated_time": "12 hours"
     }
 
-@instrument(
+@tool(
     name="check_supplies",
     description="Check available supplies and inventory"
 )
@@ -63,16 +63,16 @@ def main():
     provider = OpenAIProvider(client)
 
     # Create an arsenal with our instruments
-    navigation_arsenal = Arsenal(
+    navigation_toolbox = Toolbox(
         name="Navigation Arsenal",
         description="Tools for navigation and voyage planning"
     )
-    navigation_arsenal.add_instrument(get_weather)
-    navigation_arsenal.add_instrument(calculate_distance)
-    navigation_arsenal.add_instrument(check_supplies)
+    navigation_toolbox.add_tool(get_weather)
+    navigation_toolbox.add_tool(calculate_distance)
+    navigation_toolbox.add_tool(check_supplies)
 
     print(f"Arsenal created with {len(navigation_arsenal)} instruments")
-    print(f"Instruments: {', '.join(navigation_arsenal.list_instruments())}\n")
+    print(f"Instruments: {', '.join(navigation_toolbox.list_instruments())}\n")
 
     # Create a ToolCaptain with the arsenal
     captain = ToolCaptain(

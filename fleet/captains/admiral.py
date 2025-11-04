@@ -10,8 +10,8 @@ Plan → Execute Step 1 → Execute Step 2 → ... → Complete
 from typing import Optional, List, Dict, Any
 from fleet.captains.tool_captain import ToolCaptain
 from fleet.providers.base_provider import BaseProvider
-from fleet.instruments.arsenal import Arsenal
-from fleet.instruments.instrument import Instrument
+from fleet.tools.toolbox import Toolbox
+from fleet.tools.tool import Tool
 from fleet.payload.payload import Payload
 from dataclasses import dataclass
 import json
@@ -52,8 +52,8 @@ class Admiral(ToolCaptain):
         system_prompt: str = None,
         description: str = "",
         color: str = "blue",
-        arsenal: Optional[Arsenal] = None,
-        instruments: Optional[List[Instrument]] = None,
+        toolbox: Optional[Toolbox] = None,
+        tools: Optional[List[Tool]] = None,
         planner_model: Optional[str] = None,
         executor_model: Optional[str] = None,
         default_temperature: float = 0.0,
@@ -70,8 +70,8 @@ class Admiral(ToolCaptain):
             system_prompt: System instructions (auto-generated if None)
             description: Admiral's role
             color: Terminal color
-            arsenal: Tools available
-            instruments: Individual instruments
+            toolbox: Tools available
+            tools: Individual instruments
             planner_model: Model for planning (can be more powerful)
             executor_model: Model for execution (can be cheaper)
             default_temperature: Default temperature
@@ -88,8 +88,8 @@ class Admiral(ToolCaptain):
             system_prompt=system_prompt,
             description=description,
             color=color,
-            arsenal=arsenal,
-            instruments=instruments,
+            toolbox=toolbox,
+            tools=tools,
             default_model=planner_model or executor_model,
             default_temperature=default_temperature,
             default_max_tokens=default_max_tokens

@@ -8,7 +8,7 @@ make decisions, and optionally use instruments (tools) to accomplish tasks.
 from typing import List, Dict, Any, Optional, Union
 from fleet.payload.payload import Payload
 from fleet.providers.base_provider import BaseProvider
-from fleet.instruments.arsenal import Arsenal
+from fleet.tools.toolbox import Toolbox
 import logging
 
 logger = logging.getLogger(__name__)

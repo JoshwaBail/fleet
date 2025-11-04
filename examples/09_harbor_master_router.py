@@ -8,7 +8,7 @@ Use Case: Customer service, multi-domain applications, intelligent routing.
 """
 
 import os
-from fleet import HarborMaster, ChatCaptain, create_provider
+from fleet import Router, ChatCaptain, create_provider
 
 
 def main():
@@ -45,7 +45,7 @@ def main():
     )
 
     # Create Harbor Master router
-    harbor_master = HarborMaster(
+    harbor_master = Router(
         specialists={
             "technical": tech_support,
             "billing": billing_support,

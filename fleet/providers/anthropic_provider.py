@@ -163,7 +163,7 @@ class AnthropicProvider(BaseProvider):
             "input_schema": {...}
         }
         """
-        # Tools should already be in the correct format from Instrument.to_anthropic_schema()
+        # Tools should already be in the correct format from Tool.to_anthropic_schema()
         return tools
 
     def supports_streaming(self) -> bool:

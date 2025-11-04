@@ -159,7 +159,7 @@ class OpenAIProvider(BaseProvider):
             }
         }
         """
-        # Tools should already be in the correct format from Instrument.to_openai_schema()
+        # Tools should already be in the correct format from Tool.to_openai_schema()
         return tools
 
     def supports_streaming(self) -> bool:

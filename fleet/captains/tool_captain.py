@@ -8,8 +8,8 @@ to accomplish tasks.
 from typing import Optional, Dict, Any, List
 from fleet.captains.base_captain import BaseCaptain
 from fleet.providers.base_provider import BaseProvider
-from fleet.instruments.arsenal import Arsenal
-from fleet.instruments.instrument import Instrument
+from fleet.tools.toolbox import Toolbox
+from fleet.tools.tool import Tool
 from fleet.payload.payload import Payload
 import json
 import logging
@@ -35,8 +35,8 @@ class ToolCaptain(BaseCaptain):
         system_prompt: str = "You are a helpful AI assistant with access to tools.",
         description: str = "",
         color: str = "white",
-        arsenal: Optional[Arsenal] = None,
-        instruments: Optional[List[Instrument]] = None,
+        toolbox: Optional[Toolbox] = None,
+        tools: Optional[List[Tool]] = None,
         default_model: Optional[str] = None,
         default_temperature: float = 0.0,
         default_max_tokens: int = 2048,
@@ -51,8 +51,8 @@ class ToolCaptain(BaseCaptain):
             system_prompt: System instructions
             description: Description of this captain's role
             color: Color for terminal output
-            arsenal: Arsenal of instruments to use
-            instruments: Individual instruments (will be added to arsenal)
+            toolbox: Toolbox of instruments to use
+            tools: Individual instruments (will be added to toolbox)
             default_model: Default model to use
             default_temperature: Default temperature
             default_max_tokens: Default max tokens
@@ -60,29 +60,29 @@ class ToolCaptain(BaseCaptain):
         """
         super().__init__(provider, name, system_prompt, description, color)
 
-        # Initialize arsenal
-        self.arsenal = arsenal or Arsenal(name=f"{name}_arsenal")
+        # Initialize toolbox
+        self.toolbox = toolbox or Toolbox(name=f"{name}_toolbox")
 
         # Add individual instruments if provided
-        if instruments:
-            for instrument in instruments:
-                self.arsenal.add_instrument(instrument)
+        if tools:
+            for instrument in tools:
+                self.toolbox.add_instrument(instrument)
 
         self.default_model = default_model
         self.default_temperature = default_temperature
         self.default_max_tokens = default_max_tokens
         self.max_tool_rounds = max_tool_rounds
 
-        logger.info(f"Initialized ToolCaptain: {name} with {len(self.arsenal)} instruments")
+        logger.info(f"Initialized ToolCaptain: {name} with {len(self.toolbox)} instruments")
 
-    def add_instrument(self, instrument: Instrument):
-        """Add an instrument to this captain's arsenal"""
-        self.arsenal.add_instrument(instrument)
+    def add_instrument(self, instrument: Tool):
+        """Add an instrument to this captain's toolbox"""
+        self.toolbox.add_instrument(instrument)
         logger.info(f"{self.name} - Added instrument: {instrument.name}")
 
-    def add_instruments(self, instruments: List[Instrument]):
-        """Add multiple instruments to this captain's arsenal"""
-        for instrument in instruments:
+    def add_instruments(self, tools: List[Tool]):
+        """Add multiple instruments to this captain's toolbox"""
+        for instrument in tools:
             self.add_instrument(instrument)
 
     def send_message(
@@ -173,12 +173,12 @@ class ToolCaptain(BaseCaptain):
         provider_name = self.provider.provider_name.lower()
 
         if "openai" in provider_name or "openrouter" in provider_name:
-            return self.arsenal.to_openai_schemas()
+            return self.toolbox.to_openai_schemas()
         elif "anthropic" in provider_name:
-            return self.arsenal.to_anthropic_schemas()
+            return self.toolbox.to_anthropic_schemas()
         else:
             # Default to OpenAI format
-            return self.arsenal.to_openai_schemas()
+            return self.toolbox.to_openai_schemas()
 
     def _handle_tool_calls(self, tool_calls: List[Dict[str, Any]]):
         """
@@ -201,7 +201,7 @@ class ToolCaptain(BaseCaptain):
 
                 # Execute the instrument
                 logger.info(f"{self.name} - Executing: {function_name}")
-                result = self.arsenal.execute_instrument(function_name, **function_args)
+                result = self.toolbox.execute_instrument(function_name, **function_args)
 
                 # Convert result to string
                 result_str = json.dumps(result) if not isinstance(result, str) else result
@@ -257,4 +257,4 @@ class ToolCaptain(BaseCaptain):
         )
 
     def __str__(self) -> str:
-        return f"ToolCaptain({self.name}, {len(self.arsenal)} instruments)"
+        return f"ToolCaptain({self.name}, {len(self.toolbox)} tools)"

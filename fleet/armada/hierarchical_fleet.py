@@ -1,7 +1,7 @@
 """
-Fleet Command - Hierarchical Pattern
+Hierarchical Fleet - Hierarchical Pattern
 
-Fleet Command implements hierarchical agent orchestration where a
+Hierarchical Fleet implements hierarchical agent orchestration where a
 director/manager coordinates multiple specialized worker agents.
 
 Director → Worker 1, Worker 2, Worker 3 → Synthesis
@@ -16,9 +16,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class FleetCommand:
+class HierarchicalFleet:
     """
-    Fleet Command implements the Hierarchical (Director-Worker) pattern.
+    Hierarchical Fleet implements the Hierarchical (Director-Worker) pattern.
 
     A director captain coordinates multiple specialized worker captains,
     decomposing tasks and synthesizing results.
@@ -34,18 +34,18 @@ class FleetCommand:
         self,
         director: BaseCaptain,
         workers: List[BaseCaptain],
-        name: str = "Fleet Command",
+        name: str = "Hierarchical Fleet",
         description: str = "",
         task_decomposition_strategy: str = "llm",
         synthesize_results: bool = True
     ):
         """
-        Initialize Fleet Command (Hierarchical orchestration).
+        Initialize Hierarchical Fleet (Hierarchical orchestration).
 
         Args:
             director: The director/manager captain
             workers: List of worker captains
-            name: Fleet Command name
+            name: Hierarchical Fleet name
             description: Description
             task_decomposition_strategy: "llm" (director decides) or "rules"
             synthesize_results: Whether director synthesizes final results
@@ -63,7 +63,7 @@ class FleetCommand:
             if not hasattr(worker, 'color') or worker.color == 'white':
                 worker.color = colors[i % len(colors)]
 
-        logger.info(f"Initialized Fleet Command: {name} with director + {len(workers)} workers")
+        logger.info(f"Initialized Hierarchical Fleet: {name} with director + {len(workers)} workers")
 
     def execute_mission(
         self,
@@ -330,4 +330,4 @@ Integrate all successful worker contributions into a clear final answer."""
         return len(self.workers) + 1  # workers + director
 
     def __str__(self) -> str:
-        return f"FleetCommand({self.name}, Director + {len(self.workers)} workers)"
+        return f"HierarchicalFleet({self.name}, Director + {len(self.workers)} workers)"

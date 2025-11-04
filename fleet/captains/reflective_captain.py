@@ -1,7 +1,7 @@
 """
-Quartermaster - Reflection Pattern
+ReflectiveCaptain - Reflection Pattern
 
-A Quartermaster uses the Reflection pattern: generating output, then
+A ReflectiveCaptain uses the Reflection pattern: generating output, then
 critiquing and improving it iteratively for higher quality.
 
 Generate → Critique → Refine → Repeat
@@ -27,11 +27,11 @@ class ReflectionIteration:
     output_tokens: int = 0
 
 
-class Quartermaster(BaseCaptain):
+class ReflectiveCaptain(BaseCaptain):
     """
-    Quartermaster implements the Reflection pattern.
+    ReflectiveCaptain implements the Reflection pattern.
 
-    The Quartermaster generates output, critiques it, and refines it
+    The ReflectiveCaptain generates output, critiques it, and refines it
     through multiple iterations for higher quality results.
 
     Perfect for:
@@ -44,7 +44,7 @@ class Quartermaster(BaseCaptain):
     def __init__(
         self,
         provider: BaseProvider,
-        name: str = "Quartermaster",
+        name: str = "ReflectiveCaptain",
         system_prompt: str = "You are a helpful AI assistant focused on producing high-quality outputs.",
         description: str = "",
         color: str = "yellow",
@@ -57,13 +57,13 @@ class Quartermaster(BaseCaptain):
         verbose: bool = True
     ):
         """
-        Initialize a Quartermaster (Reflection agent).
+        Initialize a ReflectiveCaptain (Reflection agent).
 
         Args:
             provider: The LLM provider
-            name: Quartermaster name
+            name: ReflectiveCaptain name
             system_prompt: System instructions
-            description: Quartermaster's role
+            description: ReflectiveCaptain's role
             color: Terminal color
             critique_prompt: Custom critique instructions
             default_model: Default model
@@ -89,7 +89,7 @@ class Quartermaster(BaseCaptain):
         self.auto_improve = auto_improve
         self.verbose = verbose
 
-        logger.info(f"Initialized Quartermaster: {name} with Reflection pattern (max_iterations={max_iterations})")
+        logger.info(f"Initialized ReflectiveCaptain: {name} with Reflection pattern (max_iterations={max_iterations})")
 
     def _default_critique_prompt(self) -> str:
         """Default critique instructions"""
@@ -134,7 +134,7 @@ Be constructive and specific in your critique."""
 
         if self.verbose:
             print(f"\n{'='*60}")
-            print(f"📋 Quartermaster: {self.name}")
+            print(f"📋 ReflectiveCaptain: {self.name}")
             print(f"Task: {task}")
             print(f"Max Iterations: {self.max_iterations}")
             print(f"{'='*60}\n")
@@ -270,4 +270,4 @@ Content to review:
         )
 
     def __str__(self) -> str:
-        return f"Quartermaster({self.name}, Reflection pattern, max_iterations={self.max_iterations})"
+        return f"ReflectiveCaptain({self.name}, Reflection pattern, max_iterations={self.max_iterations})"

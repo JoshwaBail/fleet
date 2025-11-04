@@ -20,7 +20,7 @@ Pattern: Plan-and-Execute
 import os
 from fleet import Admiral
 from fleet.providers import create_provider
-from fleet.instruments import Instrument, Arsenal
+from fleet.tools import Instrument, Toolbox
 
 
 def main():
@@ -85,11 +85,11 @@ def main():
         return f"Opportunity Score: 7.5/10 (High market demand, moderate competition, strong user need)"
 
     # Create arsenal
-    arsenal = Arsenal()
-    arsenal.add_instrument(Instrument.from_function(search_academic_papers))
-    arsenal.add_instrument(Instrument.from_function(analyze_market_trends))
-    arsenal.add_instrument(Instrument.from_function(gather_user_feedback))
-    arsenal.add_instrument(Instrument.from_function(calculate_opportunity_score))
+    toolbox = Toolbox()
+    toolbox.add_tool(Tool.from_function(search_academic_papers))
+    toolbox.add_tool(Tool.from_function(analyze_market_trends))
+    toolbox.add_tool(Tool.from_function(gather_user_feedback))
+    toolbox.add_tool(Tool.from_function(calculate_opportunity_score))
 
     print("⚓ Creating Admiral with research instruments...")
     print()
@@ -98,7 +98,7 @@ def main():
     # In production, you might use gpt-4 for planning and gpt-4o-mini for execution
     admiral = Admiral(
         provider=provider,
-        instruments=arsenal.get_instruments(),
+        instruments=toolbox.get_tools(),
         system_prompt=(
             "You are a strategic research analyst. Create detailed, actionable plans "
             "and execute them systematically using available research tools. "

@@ -8,7 +8,7 @@ Use Case: Complex projects requiring task decomposition and specialized expertis
 """
 
 import os
-from fleet import FleetCommand, ChatCaptain, create_provider
+from fleet import HierarchicalFleet, ChatCaptain, create_provider
 
 
 def main():
@@ -59,7 +59,7 @@ Be clear and systematic in your planning.""",
     )
 
     # Create Fleet Command
-    fleet_command = FleetCommand(
+    fleet_command = HierarchicalFleet(
         director=director,
         workers=[researcher, architect, writer],
         name="Project Team",

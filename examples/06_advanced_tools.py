@@ -9,7 +9,7 @@ This example shows:
 """
 
 import os
-from fleet import ToolCaptain, OpenAIProvider, Instrument, InstrumentParameter, Arsenal
+from fleet import ToolCaptain, OpenAIProvider, Instrument, InstrumentParameter, Toolbox
 import openai
 import json
 from datetime import datetime
@@ -22,7 +22,7 @@ def main():
     provider = OpenAIProvider(client)
 
     # Create instruments with explicit parameters
-    search_ports = Instrument(
+    search_ports = Tool.from_function(
         name="search_ports",
         description="Search for ports by name or region",
         function=lambda query, region="all": {
@@ -39,7 +39,7 @@ def main():
         ]
     )
 
-    get_port_details = Instrument(
+    get_port_details = Tool.from_function(
         name="get_port_details",
         description="Get detailed information about a specific port",
         function=lambda port_name: {
@@ -52,7 +52,7 @@ def main():
         }
     )
 
-    calculate_route = Instrument(
+    calculate_route = Tool.from_function(
         name="calculate_route",
         description="Calculate optimal route between ports",
         function=lambda origin, destination, avoid_storms=True: {
@@ -72,10 +72,10 @@ def main():
     )
 
     # Build arsenal
-    navigation_arsenal = Arsenal("Advanced Navigation")
-    navigation_arsenal.add_instrument(search_ports)
-    navigation_arsenal.add_instrument(get_port_details)
-    navigation_arsenal.add_instrument(calculate_route)
+    navigation_toolbox = Toolbox("Advanced Navigation")
+    navigation_toolbox.add_tool(search_ports)
+    navigation_toolbox.add_tool(get_port_details)
+    navigation_toolbox.add_tool(calculate_route)
 
     # Create captain
     captain = ToolCaptain(
