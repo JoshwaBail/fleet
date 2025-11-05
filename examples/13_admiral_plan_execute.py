@@ -20,7 +20,7 @@ Pattern: Plan-and-Execute
 import os
 from fleet import Admiral
 from fleet.providers import create_provider
-from fleet.tools import Instrument, Toolbox
+from fleet.tools import Tool, Toolbox
 
 
 def main():
@@ -98,7 +98,7 @@ def main():
     # In production, you might use gpt-4 for planning and gpt-4o-mini for execution
     admiral = Admiral(
         provider=provider,
-        instruments=toolbox.get_tools(),
+        toolbox=toolbox,
         system_prompt=(
             "You are a strategic research analyst. Create detailed, actionable plans "
             "and execute them systematically using available research tools. "

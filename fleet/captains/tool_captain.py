@@ -66,7 +66,7 @@ class ToolCaptain(BaseCaptain):
         # Add individual instruments if provided
         if tools:
             for instrument in tools:
-                self.toolbox.add_instrument(instrument)
+                self.toolbox.add_tool(instrument)
 
         self.default_model = default_model
         self.default_temperature = default_temperature
@@ -77,7 +77,7 @@ class ToolCaptain(BaseCaptain):
 
     def add_instrument(self, instrument: Tool):
         """Add an instrument to this captain's toolbox"""
-        self.toolbox.add_instrument(instrument)
+        self.toolbox.add_tool(instrument)
         logger.info(f"{self.name} - Added instrument: {instrument.name}")
 
     def add_instruments(self, tools: List[Tool]):
@@ -201,7 +201,7 @@ class ToolCaptain(BaseCaptain):
 
                 # Execute the instrument
                 logger.info(f"{self.name} - Executing: {function_name}")
-                result = self.toolbox.execute_instrument(function_name, **function_args)
+                result = self.toolbox.execute_tool(function_name, **function_args)
 
                 # Convert result to string
                 result_str = json.dumps(result) if not isinstance(result, str) else result

@@ -9,7 +9,7 @@ This example shows:
 """
 
 import os
-from fleet import ToolCaptain, OpenAIProvider, Instrument, InstrumentParameter, Toolbox
+from fleet import ToolCaptain, OpenAIProvider, Tool, ToolParameter, Toolbox
 import openai
 import json
 from datetime import datetime
@@ -34,8 +34,8 @@ def main():
             ]
         },
         parameters=[
-            InstrumentParameter("query", "string", "Search query", required=True),
-            InstrumentParameter("region", "string", "Region filter", required=False, default="all")
+            ToolParameter("query", "string", "Search query", required=True),
+            ToolParameter("region", "string", "Region filter", required=False, default="all")
         ]
     )
 
@@ -65,9 +65,9 @@ def main():
             "storm_avoidance": avoid_storms
         },
         parameters=[
-            InstrumentParameter("origin", "string", "Starting port", required=True),
-            InstrumentParameter("destination", "string", "Destination port", required=True),
-            InstrumentParameter("avoid_storms", "boolean", "Avoid storm systems", required=False, default=True)
+            ToolParameter("origin", "string", "Starting port", required=True),
+            ToolParameter("destination", "string", "Destination port", required=True),
+            ToolParameter("avoid_storms", "boolean", "Avoid storm systems", required=False, default=True)
         ]
     )
 
@@ -86,7 +86,7 @@ def main():
 2. Get detailed port information
 3. Calculate optimal routes
 Provide comprehensive answers with specific details from your tools.""",
-        arsenal=navigation_arsenal,
+        toolbox=navigation_toolbox,
         default_model="gpt-4o-mini",
         max_tool_rounds=10  # Allow multiple rounds of tool calling
     )

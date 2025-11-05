@@ -20,7 +20,7 @@ Pattern: Handoff (Agent Transfer)
 import os
 from fleet import HandoffCaptain
 from fleet.providers import create_provider
-from fleet.tools import Instrument, Toolbox
+from fleet.tools import Tool, Toolbox
 
 
 def main():
@@ -64,7 +64,7 @@ def main():
     # 1. General Support Agent (first line)
     general_support = HandoffCaptain(
         provider=provider,
-        model="gpt-4o-mini",
+        default_model="gpt-4o-mini",
         system_prompt=(
             "You are a friendly General Support Agent. Handle common questions about "
             "account management, basic troubleshooting, and general inquiries. "
@@ -80,8 +80,8 @@ def main():
     # 2. Technical Support Specialist
     technical_support = HandoffCaptain(
         provider=provider,
-        model="gpt-4o-mini",
-        instruments=tech_toolbox.get_tools(),
+        default_model="gpt-4o-mini",
+        toolbox=tech_toolbox,
         system_prompt=(
             "You are a Technical Support Specialist. You handle complex technical issues, "
             "API problems, integration help, and system troubleshooting. "
@@ -96,7 +96,7 @@ def main():
     # 3. Billing Support Specialist
     billing_support = HandoffCaptain(
         provider=provider,
-        model="gpt-4o-mini",
+        default_model="gpt-4o-mini",
         system_prompt=(
             "You are a Billing Support Specialist. You handle questions about invoices, "
             "pricing, payment methods, refunds, and subscription management. "
@@ -110,7 +110,7 @@ def main():
     # 4. Engineering Team (final escalation)
     engineering_team = HandoffCaptain(
         provider=provider,
-        model="gpt-4o-mini",
+        default_model="gpt-4o-mini",
         system_prompt=(
             "You are a Senior Engineer. You handle complex bugs, architectural questions, "
             "and issues that require code-level investigation. "
@@ -128,20 +128,17 @@ def main():
 
     general_support.register_handoff(
         target_name="TechnicalSupport",
-        target_captain=technical_support,
-        handoff_description="Escalate technical issues to technical support specialist"
+        target_captain=technical_support
     )
 
     general_support.register_handoff(
         target_name="BillingSupport",
-        target_captain=billing_support,
-        handoff_description="Escalate billing and payment questions to billing specialist"
+        target_captain=billing_support
     )
 
     technical_support.register_handoff(
         target_name="Engineering",
-        target_captain=engineering_team,
-        handoff_description="Escalate complex bugs or architectural issues to engineering team"
+        target_captain=engineering_team
     )
 
     # Scenario 1: Technical issue requiring escalation

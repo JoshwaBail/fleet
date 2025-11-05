@@ -95,7 +95,7 @@ class HandoffCaptain(ToolCaptain):
         # Add handoff as an instrument
         if self.handoff_enabled:
             handoff_instrument = self._create_handoff_instrument(target_name, target_captain)
-            self.add_instrument(handoff_instrument)
+            self.toolbox.add_tool(handoff_instrument)
 
         logger.info(f"{self.name} registered handoff to {target_captain.name} as '{target_name}'")
 

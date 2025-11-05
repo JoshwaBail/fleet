@@ -85,7 +85,7 @@ def main():
 4. Repeat until you can answer the question
 
 Be thorough and show your reasoning process.""",
-        arsenal=analysis_arsenal,
+        toolbox=analysis_toolbox,
         default_model="gpt-4o-mini",
         max_iterations=5,
         verbose=True

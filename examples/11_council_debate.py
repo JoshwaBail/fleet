@@ -37,7 +37,7 @@ def main():
     # Technical perspective
     tech_captain = ChatCaptain(
         provider=provider,
-        model="gpt-4o-mini",
+        default_model="gpt-4o-mini",
         system_prompt=(
             "You are a Technical Lead focused on technical feasibility, "
             "scalability, maintainability, and engineering best practices. "
@@ -50,7 +50,7 @@ def main():
     # Business perspective
     business_captain = ChatCaptain(
         provider=provider,
-        model="gpt-4o-mini",
+        default_model="gpt-4o-mini",
         system_prompt=(
             "You are a Business Strategist focused on market opportunity, "
             "revenue potential, competitive advantage, and business viability. "
@@ -63,7 +63,7 @@ def main():
     # Customer perspective
     customer_captain = ChatCaptain(
         provider=provider,
-        model="gpt-4o-mini",
+        default_model="gpt-4o-mini",
         system_prompt=(
             "You are a Customer Experience Advocate focused on user needs, "
             "usability, accessibility, and customer satisfaction. "

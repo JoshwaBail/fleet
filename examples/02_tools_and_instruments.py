@@ -71,15 +71,15 @@ def main():
     navigation_toolbox.add_tool(calculate_distance)
     navigation_toolbox.add_tool(check_supplies)
 
-    print(f"Arsenal created with {len(navigation_arsenal)} instruments")
-    print(f"Instruments: {', '.join(navigation_toolbox.list_instruments())}\n")
+    print(f"Arsenal created with {len(navigation_toolbox.get_tools())} instruments")
+    print(f"Instruments: {', '.join(navigation_toolbox.list_tools())}\n")
 
     # Create a ToolCaptain with the arsenal
     captain = ToolCaptain(
         provider=provider,
         name="Navigation Officer",
         system_prompt="You are a ship's navigation officer. Use your tools to help plan voyages and check conditions.",
-        arsenal=navigation_arsenal,
+        toolbox=navigation_toolbox,
         default_model="gpt-4o-mini"
     )
 
