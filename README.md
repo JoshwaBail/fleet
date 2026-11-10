@@ -283,6 +283,10 @@ async with Client("http://localhost:8000/mcp") as mcp:
     await agent.run("What's in the inventory?")
 ```
 
+[`examples/jobfair.py`](examples/jobfair.py) is a complete agent built this way
+on a real server: it adds a local tool beside the server's, and uses `approve`
+and `deps` to cap how many billed calls a run may make.
+
 ## Providers
 
 fleet picks an adapter by the shape of the client you pass:
