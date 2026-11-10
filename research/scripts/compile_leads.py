@@ -13,7 +13,7 @@ import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LEADS = os.path.join(ROOT, "05-leads")
-FIELDS = ["priority", "segment", "company", "website", "location", "sector", "size_hint", "signal", "signal_date",
+FIELDS = ["priority", "build_type", "proposed_build", "segment", "company", "website", "location", "sector", "size_hint", "signal", "signal_date",
           "named_sponsor", "fit_note", "evidence_quote", "evidence_url", "evidence_checked"]
 
 NOT_A_SYSTEM = re.compile(r"apprentice|training|qualitative|research|survey|course|bootcamp|licen[cs]|\bsub\b|surface pro|\bpcs?\b|adoption|rollout|enablement programme|value realisation", re.I)
@@ -67,6 +67,8 @@ def priority(r):
 
 def main():
     fetched = seen_urls()
+    prop_path = os.path.join(LEADS, "proposals.json")
+    proposals = json.load(open(prop_path)) if os.path.exists(prop_path) else {}
     rows, seen, dropped = [], set(), 0
     for f in sorted(glob.glob(os.path.join(LEADS, "raw", "*.jsonl"))):
         for line in open(f):
@@ -89,6 +91,7 @@ def main():
                 continue
             seen.add(key)
             r["priority"] = p
+            r.update(proposals.get(f"{r['company']}|{r['segment']}", {"build_type": "", "proposed_build": ""}))
             if r.get("segment") in ("public-contract", "funded-project"):
                 r["evidence_checked"] = "official record"
             else:
