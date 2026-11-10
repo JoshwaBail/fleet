@@ -52,12 +52,16 @@ def priority(r):
         return "A" if (r.get("value_gbp") or 0) <= 350_000 else "B"
     if seg == "funded-project":
         return "B" if (r.get("value_gbp") or 0) >= 100_000 else "C"
+    unknown_site = (r.get("website") or "unknown").strip().lower() in ("", "unknown")
     if seg == "hiring":
-        return "A" if RELIABILITY.search(text) else "B"
+        return "A" if RELIABILITY.search(text) and not unknown_site else "B"
     if seg == "agency":
-        return "A" if re.search(r"\bfor\b.+|client|case study", r.get("signal", ""), re.I) else "B"
+        if unknown_site or "seen only in" in r.get("signal", "").lower():
+            return "C"  # directory listing or snippet only; their own site was not read
+        return "A" if re.search(r"\bnames\b", r.get("signal", "")) else "B"
     if seg == "launched-ai":
-        return "A" if r.get("named_sponsor") else "B"
+        doubt = "unsure" in r.get("signal", "").lower() or "not named" in (r.get("named_sponsor") or "").lower()
+        return "A" if r.get("named_sponsor") and not doubt else "B"
     return "B"
 
 
